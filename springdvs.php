@@ -16,7 +16,6 @@ Text Domain: springdvs
 
 add_action( 'admin_menu', 'springdvs_menu');
 
-
 function springdvs_menu() {
 	
 	add_action( 'admin_init', 'register_springdvs_settings' );
@@ -33,8 +32,24 @@ function springdvs_settings_display() {
 	include __DIR__."/config/plugin_settings.php";
 }
 
+function springdvs_node_request($action, $method, $service = '', $query = '') {
+	$node = get_option('springdvs_node_hostname');
+	$token = get_option('springdvs_api_token');
+	$query = $query == "" ? $query : "&$query";
+	$raw = file_get_contents("http://{$node}/node/api/$action/$method/$service?__token=$token$query");
+	return trim($raw) == "unauthorised" ? null : json_decode($raw, true);
+}
+
 function springdvs_overview_display() {
-	include __DIR__."/config/plugin_main.php";
+	$service = filter_input(INPUT_GET, 'service');
+	
+	if(file_exists(__DIR__."/services/$service/view.php")
+	&& file_exists(__DIR__."/services/$service/api.php")) {
+		include __DIR__."/services/$service/api.php";
+		include __DIR__."/services/$service/view.php";
+		return;
+	}
+	include __DIR__."/plugin_main.php";
 }
 
 function register_springdvs_settings() {
