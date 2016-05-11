@@ -10,7 +10,7 @@
 	}
 	
 ?>
-<h2>Network Services</h2>
+<h2>Network Services  &rsaquo; Overview</h2>
 <?php if($commsError):?>
 	<div class="notice notice-error"><p>There is an authentication error. Please check that your remote API token is correct</p></div>
 <?php endif; ?>
