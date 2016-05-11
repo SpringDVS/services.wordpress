@@ -39,13 +39,33 @@ function springdvs_node_request($action, $method, $service = '', $query = '') {
 	$raw = file_get_contents("http://{$node}/node/api/$action/$method/$service?__token=$token$query");
 	return trim($raw) == "unauthorised" ? null : json_decode($raw, true);
 }
+function springdvs_node_push($action, $method, $post, $service = '', $query = '') {
+	$node = get_option('springdvs_node_hostname');
+	$token = get_option('springdvs_api_token');
+	$query = $query == "" ? $query : "&$query";
+	
+	$url = "http://{$node}/node/api/$action/$method/$service?__token=$token$query";
 
+	ob_start();
+	$ch = curl_init($url);
+
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+	$raw = curl_exec($ch);
+	curl_close($ch);
+	ob_end_clean();
+	return trim($raw) == "unauthorised" ? null : json_decode($raw, true);
+}
 function springdvs_overview_display() {
 	$service = filter_input(INPUT_GET, 'service');
-	
+	$currentPage = filter_input(INPUT_GET, 'page');
 	if(file_exists(__DIR__."/services/$service/view.php")
-	&& file_exists(__DIR__."/services/$service/api.php")) {
+	&& file_exists(__DIR__."/services/$service/api.php")
+	&& file_exists(__DIR__."/services/$service/controller.php")) {
 		include __DIR__."/services/$service/api.php";
+		include __DIR__."/services/$service/controller.php";
 		include __DIR__."/services/$service/view.php";
 		return;
 	}
