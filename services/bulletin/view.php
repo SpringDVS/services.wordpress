@@ -41,8 +41,8 @@
 	<tfoot>
 		<tr>
 			<th class="manage-column column-title">Title</th>
-			<th class="manage-column column-title">Type</th>
-			<th class="manage-column column-title">Tags</th>	
+			<th class="manage-column column-title">Tags</th>
+			<th class="manage-column column-title">Type</th>	
 			<th class="manage-column column-title"></th>	
 		</tr>
 	</tfoot>
