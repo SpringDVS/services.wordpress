@@ -1,0 +1,40 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+.sdvs-loader {
+    float: right;
+    display: none;
+}
+.spring-bulletin {
+    
+}
+
+.spring-bulletin table.main {
+    
+}
+
+.spring-bulletin td.node-uri {
+    font-weight: bold;
+}
+
+.spring-bulletin tr.profile-view {
+    background-color: #DFDFDF;
+    display: none;
+}
+.spring-bulletin .profile-block {
+    padding: 10px;
+}
+
+.spring-bulletin .profile-block a.control {
+    font-size: 12px;
+}
+.spring-bulletin .profile-block h3 {
+    margin-bottom: 5px;
+}
+.spring-bulletin table.inner,
+.spring-bulletin table.inner tr,
+.spring-bulletin table.inner td {
+    border-width: 0px;
+}

@@ -10,38 +10,50 @@ class SpringDvsBulletinsLatest extends WP_Widget {
 			);
 		
 			if (is_active_widget( false, false, $this->id_base )) {
-				wp_enqueue_script('sdvs_bulletin_lastest', plugins_url('latest_client.js', __FILE__));
+				wp_enqueue_script('sdvs_bulletin_lastest_js', plugins_url('latest_client.js', __FILE__));
+				wp_enqueue_style('sdvs_bulletin_lastest_css', plugins_url('latest_style.css', __FILE__));
 			}
 	}
 	
 	function form( $instance ) {
 		$defaults = array(
-			'uri' => 'esusx.uk',
+			'network' => 'esusx.uk',
+			'query' => '',
 		);
 		
-		$uri = $instance['uri'];
+		$network = $instance['network'];
+		$query = $instance['query'];
 		?>
-		<label for="<?php echo $this->get_field_id( 'uri' ); ?>">Network:</label>
-		<input class="widefat" type="text" id="<?php echo $this->get_field_id( 'uri' ); ?>" name="<?php echo $this->get_field_name( 'uri' ); ?>" value="<?php echo esc_attr( $uri ); ?>">
+		<label for="<?php echo $this->get_field_id( 'network' ); ?>">Network:</label>
+		<input class="widefat" type="text" id="<?php echo $this->get_field_id( 'network' ); ?>" name="<?php echo $this->get_field_name( 'network' ); ?>" value="<?php echo esc_attr( $network ); ?>">
+		<label for="<?php echo $this->get_field_id( 'query' ); ?>">Query:</label>
+		<input class="widefat" type="text" id="<?php echo $this->get_field_id( 'query' ); ?>" name="<?php echo $this->get_field_name( 'query' ); ?>" value="<?php echo esc_attr( $query ); ?>">
 		<?php
 	} 
 	
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		$instance['uri'] = strip_tags($new_instance['uri']);
+		$instance['network'] = strip_tags($new_instance['network']);
+		$instance['query'] = strip_tags($new_instance['query']);
 		return $instance;
 	}
 	
 	function widget( $args, $instance ) {
 		extract( $args );
-		echo $before_widget;		
-		echo $before_title . 'Latest Bulletins on <em>' . $instance['uri'] ."</em>". $after_title;	
+		echo $before_widget;
+		$loader = "<img class='sdvs-loader' id='spring-bulletin-loader' src=".plugins_url('../../../res/load.gif', __FILE__).">";
+		echo $before_title . 'Latest Bulletins on <em>' . $instance['network'] ."</em>$loader". $after_title;	
 		$node = get_option('springdvs_node_hostname');
-		$uri = $instance['uri'];
+		$uri = $instance['network'];
+		$query = $instance['query'];
 		?>
-		<div id="sdvs-bulletins-latest-hostname"><?php echo $node; ?></div>
-		<span id="sdvs-bulletins-latest-uri"></span>
-		<script type="text/javascript">SdvsBulletinsLatestCli.request(<?php echo "'$uri','$node'" ?>);</script>
+		<div class="spring-bulletin">
+			<table class="wp-list-table widefat  striped main">
+				<tbody class="the-list" id="sdvs-bulletin-list-body">
+				</tbody>
+			</table>
+		</div>
+		<script type="text/javascript">SdvsBulletinsLatestCli.request(<?php echo "'$uri','$node','$query'" ?>);</script>
 		<?php
 	}
 }
