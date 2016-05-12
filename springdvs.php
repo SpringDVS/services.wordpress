@@ -28,39 +28,58 @@ function springdvs_menu() {
 
 function springdvs_settings_display() {
 	
-	springdvs_update_options();
+	$commsError = springdvs_update_options();
 	include __DIR__."/config/plugin_settings.php";
 }
 
 function springdvs_node_request($action, $method, $service = '', $query = '') {
+
 	$node = get_option('springdvs_node_hostname');
 	$token = get_option('springdvs_api_token');
-	$query = $query == "" ? $query : "&$query";
-	$raw = file_get_contents("http://{$node}/node/api/$action/$method/$service?__token=$token$query");
+	
+	$url = "http://{$node}/node/api/$action/$method/$service?$query";
+	
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, array('__token' => $token));
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	
+	$raw = curl_exec($ch);	
+	curl_close($ch);
+	
+	//$raw = file_get_contents("http://{$node}/node/api/$action/$method/$service?__token=$token$query");
 	return trim($raw) == "unauthorised" ? null : json_decode($raw, true);
 }
 function springdvs_node_push($action, $method, $post, $service = '', $query = '') {
 	$node = get_option('springdvs_node_hostname');
 	$token = get_option('springdvs_api_token');
-	$query = $query == "" ? $query : "&$query";
 	
-	$url = "http://{$node}/node/api/$action/$method/$service?__token=$token$query";
-
-	ob_start();
+	
+	$url = "http://{$node}/node/api/$action/$method/$service?$query";
+	
+	$post = is_array($post) ? $post['__token'] = $token : "__token=$token";
+	
+	
 	$ch = curl_init($url);
 
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
-	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 	$raw = curl_exec($ch);
 	curl_close($ch);
-	ob_end_clean();
+	
 	return trim($raw) == "unauthorised" ? null : json_decode($raw, true);
 }
+
+
 function springdvs_overview_display() {
 	$service = filter_input(INPUT_GET, 'service');
 	$currentPage = filter_input(INPUT_GET, 'page');
+	
+	$nodeUri = get_option('springdvs_node_uri');
+	$nodeUri = $nodeUri == "" ? "" : "spring://$nodeUri";
+	
 	if(file_exists(__DIR__."/services/$service/view.php")
 	&& file_exists(__DIR__."/services/$service/api.php")
 	&& file_exists(__DIR__."/services/$service/controller.php")) {
@@ -95,11 +114,27 @@ function springdvs_settings_node_hostname_input() {
 }
 
 function springdvs_update_options() {
+	$updated = false;
+	
 	if( ($api_token = filter_input(INPUT_POST, 'springdvs_settings_api_token')) !== null ) {
 		update_option('springdvs_api_token', $api_token);
+		$updated = true;
 	}
+
 	if( ($node_hostname = filter_input(INPUT_POST, 'springdvs_settings_node_hostname')) !== null ) {
 		update_option('springdvs_node_hostname', $node_hostname);
+		$updated = true;
 	}
+
+	if(!$updated) return false;
+
+	update_option('springdvs_node_uri', "");
+	$response = springdvs_node_request('springnet', 'get');
+	
+	if($response == null) return true;
+	
+	$network = $response['springname'].'.'.$response['network'];
+	update_option('springdvs_node_uri', $network);
+	return false;
 }
 ?>
