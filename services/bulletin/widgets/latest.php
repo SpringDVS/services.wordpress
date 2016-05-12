@@ -8,6 +8,10 @@ class SpringDvsBulletinsLatest extends WP_Widget {
 			'Latest Bulletins',
 			array('description' => 'Display lastest bulletins on SpringDVS network')
 			);
+		
+			if (is_active_widget( false, false, $this->id_base )) {
+				wp_enqueue_script('sdvs_bulletin_lastest', plugins_url('latest_client.js', __FILE__));
+			}
 	}
 	
 	function form( $instance ) {
@@ -31,14 +35,14 @@ class SpringDvsBulletinsLatest extends WP_Widget {
 	function widget( $args, $instance ) {
 		extract( $args );
 		echo $before_widget;		
-		echo $before_title . 'Latest Bulsletins on <em>' . $instance['uri'] ."</em>". $after_title;	
-		echo "spring://{$instance['uri']}";
-	}
-	
-	public static function conditionalScriptEnqueue($path) {
-		if( is_active_widget( '', '', 'SpringDvsBulletinsLatest' ) ) {
-			wp_enqueue_script("$path/latest_client.js");
-		}
+		echo $before_title . 'Latest Bulletins on <em>' . $instance['uri'] ."</em>". $after_title;	
+		$node = get_option('springdvs_node_hostname');
+		$uri = $instance['uri'];
+		?>
+		<div id="sdvs-bulletins-latest-hostname"><?php echo $node; ?></div>
+		<span id="sdvs-bulletins-latest-uri"></span>
+		<script type="text/javascript">SdvsBulletinsLatestCli.request(<?php echo "'$uri','$node'" ?>);</script>
+		<?php
 	}
 }
 
