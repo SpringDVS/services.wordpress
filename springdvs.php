@@ -17,6 +17,12 @@ defined( 'ABSPATH' ) or die( 'Error' );
 include __DIR__.'/plugin/request.php';
 include __DIR__.'/plugin/settings.php';
 include __DIR__.'/plugin/views.php';
+include __DIR__.'/plugin/widgets.php';
+
+
+
+add_action('widgets_init', 'springdvs_init_widgets');
+
 
 add_action( 'admin_menu', 'springdvs_menu');
 
@@ -28,5 +34,7 @@ function springdvs_menu() {
 		'springdvs_settings_display');
 	add_menu_page( 'SpringDVS Services', 'SpringDVS', 'edit_pages', 'springdvs_overview', 'springdvs_overview_display');
 }
+
+
 
 ?>
