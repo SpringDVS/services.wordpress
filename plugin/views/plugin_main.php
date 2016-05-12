@@ -16,9 +16,8 @@
 <h2>Network Services  &rsaquo; Overview</h2>
 
 
-<?php if($commsError):?>
-	<div class="notice notice-error"><p>There is an authentication error. Please check that your remote API token is correct</p></div>
-<?php endif; ?>
+<?php if($commsError){ springdvs_notice_error_connection();} ?>
+
 <div style="margin-right: 20px;">
 
 	<table class="wp-list-table widefat  striped">

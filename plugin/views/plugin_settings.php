@@ -16,10 +16,7 @@ $node = get_option('springdvs_node_uri');
 $node = $node == "" ? "Unresolved" : "spring://$node";
 ?>
 <strong><?php echo $node ?></strong>
-<?php if($commsError):?>
-	<div class="notice notice-error"><p>There is an authentication error. Please check that your remote API token is correct</p></div>
-
-<?php elseif($node == "Unresolved"):?>
+<?php if($commsError){ springdvs_notice_error_connection();} else if($node == "Unresolved"):?>
 	<div class="notice notice-warning"><p>The node has not been resolved. This could be due to incorrect remote settings in the plugin.</p></div>
 <?php else: ?>
 	<div class="notice notice-success"><p>Link with node is resolved and holding steady!</p></div>
