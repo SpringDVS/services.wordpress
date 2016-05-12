@@ -1,16 +1,20 @@
 
 var SdvsBulletinsLatestCli = {
     gateway: "",
+    network: "",
     request: function(network, gateway, query) {
         SdvsBulletinsLatestCli.gateway = gateway;
+        SdvsBulletinsLatestCli.network = network;
         uri = network+"/bulletin/";
-        uri = query == '' ? uri : uri +"?"+ query;
+        
+        query = query == "" ? "" : "&"+query;
         uri = uri.replace(/\./g, "%2E");
+        console.log(uri);
         var $j = jQuery.noConflict();
         $j('#spring-bulletin-loader').show();
         $j.ajax({
             type: "GET",
-            url: "http://"+gateway+"/gateway/bulletin/?__req="+uri,
+            url: "http://"+gateway+"/gateway/bulletin/?__req="+uri+query,
             async: false,
             jsonpCallback: "recvBulletins",
             dataType: "jsonp",
@@ -20,6 +24,19 @@ var SdvsBulletinsLatestCli = {
             }
             }
         );       
+    },
+    
+    rerequest: function(query) {
+        tag = query == "" ? "none" : query;
+        var $j = jQuery.noConflict();
+        $j("#sdvs-bulletin-list-filter").text(tag);
+        query = query == "" ? "" : "tags="+query;
+        SdvsBulletinsLatestCli.request(
+            SdvsBulletinsLatestCli.network,
+            SdvsBulletinsLatestCli.gateway,
+            query
+        );
+        
     },
     
     requestProfile: function(node) {
@@ -55,9 +72,14 @@ var SdvsBulletinsLatestCli = {
                 for(i in list) {
                     item = list[i];
                     
+                    for(ti in item.tags) {
+                        tag = item.tags[ti];
+                        item.tags[ti] = "<a href='javascript:void(0)' onclick='SdvsBulletinsLatestCli.rerequest(`"+tag+"`)'>" + tag +"</a>"
+                    }
+                    
                     list_html += ([
                         "<tr>",
-                        "<td><div>" + item.title +"</div><div style='font-size: 12px'>"+item.tags.join(', ')+"</div></td>",
+                        "<td><div>" + item.title +"</div><div style='font-size: 12px'>tags: "+item.tags.join(', ')+"</div></td>",
                         "</tr>",
                     ].join('\n'));
                 }
@@ -74,6 +96,7 @@ var SdvsBulletinsLatestCli = {
 
                 ].join('\n');
                 
+                $j("#sdvs-bulletin-list-body").empty();
                 $j("#sdvs-bulletin-list-body").html(html);
             }
         }

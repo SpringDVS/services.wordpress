@@ -48,6 +48,7 @@ class SpringDvsBulletinsLatest extends WP_Widget {
 		$query = $instance['query'];
 		?>
 		<div class="spring-bulletin">
+			<div>Filter: <span id='sdvs-bulletin-list-filter'>none</span> <a href='javascript:void(0);' onclick='SdvsBulletinsLatestCli.rerequest("")' class='reset'>reset</a></div>
 			<table class="wp-list-table widefat  striped main">
 				<tbody class="the-list" id="sdvs-bulletin-list-body">
 				</tbody>

@@ -10,7 +10,9 @@ and open the template in the editor.
 .spring-bulletin {
     
 }
-
+.spring-bulletin a.reset {
+    float: right;
+}
 .spring-bulletin table.main {
     
 }
