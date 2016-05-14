@@ -14,8 +14,6 @@ Text Domain: springdvs
 
 defined( 'ABSPATH' ) or die( 'Error' );
 
-define( 'WP_DEBUG', true );
-
 include __DIR__.'/plugin/request.php';
 include __DIR__.'/plugin/settings.php';
 include __DIR__.'/plugin/views.php';
