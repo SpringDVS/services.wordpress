@@ -63,9 +63,9 @@ var SdvsBulletinsLatestCli = {
     apply: function(bulletins) {
         
         var $j = jQuery.noConflict();
-        
-        for(var index in bulletins) {
-            for(var node in  bulletins[index]) {
+        html = "";
+        for(index in bulletins) {
+            for(node in  bulletins[index]) {
                 list = bulletins[index][node];
                 
                 list_html = "";
@@ -86,7 +86,7 @@ var SdvsBulletinsLatestCli = {
                 
                 eid = node.replace(/\./g, "-");
                 
-                html = [
+                html += [
                     "<tr><td class='node-uri'>",
                     "<a href='javascript:void(0);' onclick='SdvsBulletinsLatestCli.requestProfile(`"+node+"`)'>"+node+"</a> &rsaquo;&rsaquo;",
                     "</td></tr>",
@@ -96,10 +96,11 @@ var SdvsBulletinsLatestCli = {
 
                 ].join('\n');
                 
-                $j("#sdvs-bulletin-list-body").empty();
-                $j("#sdvs-bulletin-list-body").html(html);
+                
             }
         }
+        $j("#sdvs-bulletin-list-body").empty();
+        $j("#sdvs-bulletin-list-body").html(html);
         $j('#spring-bulletin-loader').hide();
     },
 
