@@ -1,8 +1,8 @@
 <?php
 	// Pull network services
 	$services = springdvs_node_request('nwservices', 'pull');
-	
-	
+	$updates = springdvs_node_request('updates', 'pull');
+
 	$commsError = false;
 	if($services === null) {
 		$commsError = true;
@@ -40,4 +40,37 @@
 	?>
 		</tbody>
 	</table>
+	
+
+</div>
+<div style="margin-right: 20px; margin-top: 20px;">
+<?php
+if( isset($updates[0]) && isset($updates[0]['modules'][0])
+|| ($updates[1]) && isset($updates[1]['modules'][0]) ): ?>
+<strong>Module Updates</strong>
+
+<form method="post">
+	<div style="height: 45px;" class="notice notice-info"><p>Updates Available<input style="float: right;" type="submit" class="button button-primary" value="Update"></p></div>
+	<table>
+		<tbody>
+		<input type="hidden" name="node_action" value="update">
+			<?php 
+				foreach($updates as $type) {
+					if(!isset($type['modules'][0])) continue;
+					echo "<tr><td colspan=\"2\"><strong>{$type['mtype']} Services</strong></td></tr>";
+					foreach($type['modules'] as $module) {
+						echo "<tr>";
+						echo "<td>{$module['module']}</td>";
+						echo "<td> {$module['details']['version']}</td>";
+						echo "</tr>";
+					}
+				}
+			?>
+		</tbody>
+	</table>
+	
+</form>
+<?php elseif($updated): ?>
+	<div class="notice notice-success"><p>Update Successful!</p></div>
+<?php endif; ?>
 </div>

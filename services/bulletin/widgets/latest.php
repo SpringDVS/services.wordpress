@@ -26,7 +26,7 @@ class SpringDvsBulletinsLatest extends WP_Widget {
 		?>
 		<label for="<?php echo $this->get_field_id( 'network' ); ?>">Network:</label>
 		<input class="widefat" type="text" id="<?php echo $this->get_field_id( 'network' ); ?>" name="<?php echo $this->get_field_name( 'network' ); ?>" value="<?php echo esc_attr( $network ); ?>">
-		<label for="<?php echo $this->get_field_id( 'query' ); ?>">Query:</label>
+		<label for="<?php echo $this->get_field_id( 'query' ); ?>">Filter:</label>
 		<input class="widefat" type="text" id="<?php echo $this->get_field_id( 'query' ); ?>" name="<?php echo $this->get_field_name( 'query' ); ?>" value="<?php echo esc_attr( $query ); ?>">
 		<?php
 	} 

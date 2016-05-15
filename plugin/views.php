@@ -11,7 +11,11 @@ function springdvs_overview_display() {
 	
 	$nodeUri = get_option('springdvs_node_uri');
 	$nodeUri = $nodeUri == "" ? "" : "spring://$nodeUri";
-	
+	$updated = false;
+	if(filter_input(INPUT_POST, 'node_action') == 'update') {
+		springdvs_node_request('updates', 'push');
+		$updated = true;
+	}
 	if(file_exists(__DIR__."/../services/$service/view.php")
 	&& file_exists(__DIR__."/../services/$service/api.php")
 	&& file_exists(__DIR__."/../services/$service/controller.php")) {
