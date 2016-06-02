@@ -45,8 +45,14 @@
 </div>
 <div style="margin-right: 20px; margin-top: 20px;">
 <?php
-if( isset($updates[0]) && isset($updates[0]['modules'][0])
-|| ($updates[1]) && isset($updates[1]['modules'][0]) ): ?>
+$update = false;
+foreach($updates as $t) {
+	if(isset($t['modules'][0])) {
+		$update = true;
+	}
+}
+
+if($update): ?>
 <strong>Module Updates</strong>
 
 <form method="post">
