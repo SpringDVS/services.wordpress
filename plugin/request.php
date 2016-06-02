@@ -39,4 +39,3 @@ function springdvs_request($url, $post) {
 	curl_close($ch);
 	return $raw;
 }
-
