@@ -60,6 +60,26 @@ var SdvsBulletinsLatestCli = {
 
     },
     
+    requestContent: function(node, uid) {
+        uri = node+"/bulletin/"+uid+"/";
+        uri = uri.replace(/\./g, "%2E");
+
+        var $j = jQuery.noConflict();
+        $j('#spring-bulletin-loader').show();
+        $j.ajax({
+            type: "GET",
+            url: "http://"+SdvsBulletinsLatestCli.gateway+"/gateway/orgprofile/?__req="+uri,
+            async: false,
+            jsonpCallback: "recvContent",
+            dataType: "jsonp",
+            success: function(json) {
+            },
+            error: function(e) {
+            }
+            }
+        );             	
+    },
+    
     apply: function(bulletins) {
         
         var $j = jQuery.noConflict();
@@ -69,6 +89,7 @@ var SdvsBulletinsLatestCli = {
                 list = bulletins[index][node];
                 
                 list_html = "";
+                l = list.length-1;
                 for(i in list) {
                     item = list[i];
                     
@@ -78,10 +99,15 @@ var SdvsBulletinsLatestCli = {
                     }
                     
                     list_html += ([
-                        "<tr>",
-                        "<td><div>" + item.title +"</div><div style='font-size: 12px'>tags: "+item.tags.join(', ')+"</div></td>",
-                        "</tr>",
+                        "<tr><td><a class='title' href='javascript:void(0)' onclick='SdvsBulletinsLatestCli.requestContent(`"+node+"`,`"+item.uid+"`)'>" + item.title +"</a> &rsaquo;&rsaquo;</td></tr>",
+                        "<tr><td style='display: none;' id='content-"+item.uid+"'>Content</td></tr>"
                     ].join('\n'));
+                    
+                    if(i == l) {
+                    	list_html += "<tr><td class='details'>tags: "+item.tags.join(', ')+"</td></tr>";
+                    } else {
+                    	list_html += "<tr><td class='details separator'>tags: "+item.tags.join(', ')+"</td></tr>";
+                    }
                 }
                 
                 eid = node.replace(/\./g, "-");
@@ -90,10 +116,11 @@ var SdvsBulletinsLatestCli = {
                     "<tr><td class='node-uri'>",
                     "<a href='javascript:void(0);' onclick='SdvsBulletinsLatestCli.requestProfile(`"+node+"`)'>"+node+"</a> &rsaquo;&rsaquo;",
                     "</td></tr>",
+                    
                     "<tr id='"+eid+"-profile'class='profile-view'><td>",
                     "</td></tr>",
-                    "<tr><td><table class='inner'><tbody>"+list_html+"</tbody></table></td></tr>",
 
+                    "<tr><td><table class='inner'><tbody>"+list_html+"</tbody></table></td></tr>"
                 ].join('\n');
                 
                 
@@ -132,7 +159,31 @@ var SdvsBulletinsLatestCli = {
          eid = node.replace(/\./g, "-");
         element = $j("#"+eid+"-profile");
         element.hide();
-    }
+    },
+    
+    applyContent: function(bulletins) {
+    	 var $j = jQuery.noConflict();
+    	 for(index in bulletins) {
+    		 for(node in  bulletins[index]) {
+    			 item = bulletins[index][node];
+    			 
+    			 info = [
+    			         item.content,
+    			         "<br><a href='javascript:void(0);' onclick='SdvsBulletinsLatestCli.hideContent(`"+item.uid+"`)'>hide</div>"
+    			       ].join('\n');
+    			 $j('#content-'+item.uid).html(info);
+    			 $j('#content-'+item.uid).show();
+    		 }
+    	 }
+    	 
+         $j('#spring-bulletin-loader').hide();
+    },
+    
+    hideContent: function(uid) {
+        var $j = jQuery.noConflict();
+        element = $j("#content-"+uid);
+        element.hide();
+    },
 }
 
 recvBulletins = function (data) {
@@ -145,4 +196,10 @@ recvProfile = function (data) {
     if(data.service == "error"){ console.log("Service Error"); return; }
     if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
     SdvsBulletinsLatestCli.applyProfile(data.content);
+}
+
+recvContent = function (data) {
+	   if(data.service == "error"){ console.log("Service Error"); return; }
+	   if(data.status != "ok"){ console.log("Service Error"); console.log(data.uri); return; }
+	   SdvsBulletinsLatestCli.applyContent(data.content);
 }

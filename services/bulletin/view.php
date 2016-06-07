@@ -7,6 +7,9 @@
 		$commsError = true;
 		$bulletins = [];
 	}
+
+	$pageTask = filter_input(INPUT_GET, 'task');
+	$pageKey = filter_input(INPUT_GET, 'key');
 	
 ?>
 <div style="margin-top: 20px; margin-right: 20px; float: right;">
@@ -21,26 +24,37 @@
 		<tr>
 			<th class="manage-column column-title" style="width: 75%;">Title</th>
 			<th class="manage-column column-title" style="width: 25%;">Tags</th>
-			<th class="manage-column column-title">Type</th>
 			<th class="manage-column column-title" style="width: 75%;"></th>
 		</tr>
 	</thead>
 	<tbody class="the-list">
 <?php foreach($bulletins as $bulletin): ?>
 		<tr>
-			<td><?php echo $bulletin['title']; ?></td>
+
+			<?php if($pageTask == 'view' && $pageKey == $bulletin['key']): ?>
+				<td><a href="<?php echo "?page=$currentPage&service=bulletin";?>"><?php echo $bulletin['title']; ?></a></td>
+			<?php else: ?>
+				<td><a href="<?php echo "?page=$currentPage&service=bulletin&task=view&key={$bulletin['key']}";?>"><?php echo $bulletin['title']; ?></a></td>
+			<?php endif;?>
+
 			<td><?php echo $bulletin['tags']; ?></td>
-			<td><?php echo $bulletin['type']; ?></td>
 			<td><a href="<?php echo "?page=$currentPage&service=bulletin&task=rem&key={$bulletin['key']}";?>">delete</a></td>
 		</tr>
+		<?php if($pageTask == 'view' && $pageKey == $bulletin['key']): ?>
+			<tr>
+				<td colspan="3">
+					<?php echo str_replace("\n", '<br>', $bulletin['content']); ?>
+					<div style="font-size: 12px; width: 100%; text-align: right;"><?php echo $bulletin['uid']?></div>
+				</td>
+			</tr>
+		<?php endif ?>
 	
 <?php	endforeach; ?>
 	</tbody>
 	<tfoot>
 		<tr>
 			<th class="manage-column column-title">Title</th>
-			<th class="manage-column column-title">Tags</th>
-			<th class="manage-column column-title">Type</th>	
+			<th class="manage-column column-title">Tags</th>	
 			<th class="manage-column column-title"></th>	
 		</tr>
 	</tfoot>
@@ -57,12 +71,8 @@
 			 <input name="title" id="bf-title" type="text">
 		</div>
 		<div class="form-field form-required term-name-wrap" style="margin-top: 10px;">
-			<label for="bf-type">Type</label><br>
-			<select name="type" id="bftype" class="postform">
-					<option value="event">Event</option>
-					<option value="notice">Notice</option>
-					<option value="service">Service</option>
-			</select>
+			<label for="bf-content">Content</label><br>
+			<textarea name="content" id="bf-content"></textarea>
 		</div>
 		<div class="form-field term-name-wrap" style="margin-top: 10px;">
 			<label for="bf-tags">Tags</label>

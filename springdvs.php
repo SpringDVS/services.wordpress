@@ -3,7 +3,7 @@
 Plugin Name: SpringDVS
 Plugin URI:  http://spring-dvs.org
 Description: Plugin for managing node services
-Version:     1.2.0
+Version:     1.3.0
 Author:      The Care Connections Initiative c.i.c
 Author URI:  http://spring-dvs.org
 License:     GPL2
