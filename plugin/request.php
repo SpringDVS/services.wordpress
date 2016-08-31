@@ -23,6 +23,7 @@ function springdvs_node_push($action, $method, $post, $service = '', $query = ''
 function springdvs_request($url, $post) {
 	$protocol = get_option('springdvs_node_protocol');
 	$url = "$protocol://$url";
+
 	$ch = curl_init($url);
 
 	curl_setopt($ch, CURLOPT_POST, 1);

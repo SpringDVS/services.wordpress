@@ -15,7 +15,7 @@
 <div style="margin-top: 20px; margin-right: 20px; float: right;">
 		<strong><?php echo $nodeUri; ?></strong>
 </div>
-<h2>Network Services &rsaquo; Bulletins</h2>
+<h2>SpringDVS &rsaquo; Network Services &rsaquo; Bulletins</h2>
 <?php if($commsError){ springdvs_notice_error_connection();} ?>
 
 <div class="metabox-holder" style="margin-right: 20px;">

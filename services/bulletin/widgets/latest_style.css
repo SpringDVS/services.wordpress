@@ -36,13 +36,15 @@ and open the template in the editor.
     margin-bottom: 5px;
 }
 .spring-bulletin table.inner {
-	border-collapse: collapse;	
+	border-collapse: collapse;
+	margin-left: 15px;
+	width: 97%;
 }
 .spring-bulletin table.inner,
 .spring-bulletin table.inner tr,
 .spring-bulletin table.inner td {
 	border-width: 0px;
-    border-collapse: collapse;
+	border-collapse: collapse;
 	padding: 3px;
 }
 
